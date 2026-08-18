@@ -1,5 +1,22 @@
 import os
 
+
+bestmejor_valor = 1.3
+bestmejor_combinacion = []
+
+objetos = [
+        (1,150,20),
+        (2,325,40),
+        (3,600,50),
+        (4,805,36),
+        (5,430,25),
+        (6,1200,64),
+        (7,770,54),
+        (8,60,18),
+        (9,930,46),
+        (10,353,28)
+    ]
+
 def limpiar_pantalla():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -43,8 +60,11 @@ def busqueda_exhaustiva():
     capacidad = int(input("Capacidad de la mochila (cm3): "))
 
     print(f"\nCapacidad elegida: {capacidad} cm3")
-    print("\n>> Aquí irá el algoritmo exhaustivo.")
-
+    """print("\n>> Aquí irá el algoritmo exhaustivo.")"""
+    # Implementar el algoritmo de búsqueda exhaustiva aquí
+    bestmejor_valor, bestmejor_combinacion = exhaustiva(capacidad, objetos)
+    print(f"\nMejor combinación: {bestmejor_combinacion}")
+    print(f"Mejor valor: ${bestmejor_valor}")
     pausa()
 
 
@@ -125,5 +145,27 @@ def menu():
             print("\nOpción inválida.")
             pausa()
 
+
+def exhaustiva(capacidad, objetos):
+    n = len(objetos)
+    bestmejor_valor = 0
+    bestmejor_combinacion = []
+
+    for i in range(1 << n):  # Iterar sobre todas las combinaciones posibles
+        volumen_total = 0
+        valor_total = 0
+        combinacion_actual = []
+
+        for j in range(n):
+            if i & (1 << j):  # Si el j-ésimo objeto está incluido
+                volumen_total += objetos[j][1]
+                valor_total += objetos[j][2]
+                combinacion_actual.append(objetos[j][0])
+
+        if volumen_total <= capacidad and valor_total > bestmejor_valor:
+            bestmejor_valor = valor_total
+            bestmejor_combinacion = combinacion_actual
+
+    return bestmejor_valor, bestmejor_combinacion
 
 menu()
