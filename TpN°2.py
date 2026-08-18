@@ -1,23 +1,21 @@
 import os
 from itertools import product
-
+#
 
 bestmejor_valor = 1.3
 bestmejor_combinacion = []
-
 objetos = [
-        (1,150,20),
-        (2,325,40),
-        (3,600,50),
-        (4,805,36),
-        (5,430,25),
-        (6,1200,64),
-        (7,770,54),
-        (8,60,18),
-        (9,930,46),
-        (10,353,28)
-    ]
-
+    (1,150,20),
+    (2,325,40),
+    (3,600,50),
+    (4,805,36),
+    (5,430,25),
+    (6,1200,64),
+    (7,770,54),
+    (8,60,18),
+    (9,930,46),
+    (10,353,28)
+]
 def limpiar_pantalla():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -44,7 +42,6 @@ def mostrar_objetos():
         (9,930,46),
         (10,353,28)
     ]
-
     for obj in objetos:
         print(f"{obj[0]}\t{obj[1]}\t\t${obj[2]}")
 
@@ -80,8 +77,8 @@ def algoritmo_greedy():
 
     print("\nSeleccione el criterio:")
 
-    print("1) Mayor valor")
-    print("2) Menor volumen")
+    #print("1) Mayor valor")
+    #print("2) Menor volumen")
     print("3) Mejor relación Valor/Volumen")
 
     opcion = input("\nOpción: ")
@@ -89,10 +86,44 @@ def algoritmo_greedy():
     print(f"\nCapacidad: {capacidad} cm3")
     print(f"Criterio seleccionado: {opcion}")
 
-    print("\n>> Aquí irá el algoritmo greedy.")
+    if opcion == "3":
+        combinacion, volumen, valor = greedy(capacidad, objetos)
 
+        print("\n--- RESULTADO ---")
+        print(f"Objetos seleccionados: {combinacion}")
+        print(f"Volumen utilizado: {volumen} cm3")
+        print(f"Valor total: ${valor}")
+    else:
+        print("\nOpción inválida.")
     pausa()
 
+def greedy(capacidad, objetos):
+
+    # Ordenamos los objetos según su relación valor/volumen
+    objetos_ordenados = sorted(
+        objetos,
+        key=lambda x: x[2] / x[1],
+        reverse=True
+    )
+
+    combinacion = []
+    volumen = 0
+    valor = 0
+
+    for objeto in objetos_ordenados: 
+
+        numero = objeto[0]
+        volumen_objeto = objeto[1]
+        valor_objeto = objeto[2]
+
+        # Verificamos si el objeto entra en la mochila
+        if volumen + volumen_objeto <= capacidad:
+
+            combinacion.append(numero)
+            volumen += volumen_objeto
+            valor += valor_objeto
+
+    return combinacion, volumen, valor
 
 def comparar():
     limpiar_pantalla()
