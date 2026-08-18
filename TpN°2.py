@@ -1,4 +1,5 @@
 import os
+from itertools import product
 
 
 bestmejor_valor = 1.3
@@ -61,7 +62,7 @@ def busqueda_exhaustiva():
 
     print(f"\nCapacidad elegida: {capacidad} cm3")
     """print("\n>> Aquí irá el algoritmo exhaustivo.")"""
-    # Implementar el algoritmo de búsqueda exhaustiva aquí
+    # Implementar el algoritmo de búsqueda exhaustiva aquí lean
     bestmejor_valor, bestmejor_combinacion = exhaustiva(capacidad, objetos)
     print(f"\nMejor combinación: {bestmejor_combinacion}")
     print(f"Mejor valor: ${bestmejor_valor}")
@@ -148,24 +149,32 @@ def menu():
 
 def exhaustiva(capacidad, objetos):
     n = len(objetos)
-    bestmejor_valor = 0
-    bestmejor_combinacion = []
 
-    for i in range(1 << n):  # Iterar sobre todas las combinaciones posibles
+    mejor_valor = 0
+    mejor_combinacion = []
+
+    # Generamos todas las combinaciones posibles
+    combinaciones = product([0, 1], repeat=n)
+
+    for combinacion in combinaciones:
         volumen_total = 0
         valor_total = 0
         combinacion_actual = []
 
+        # Recorremos los objetos
         for j in range(n):
-            if i & (1 << j):  # Si el j-ésimo objeto está incluido
+
+            # Si el valor es 1, llevamos ese objeto
+            if combinacion[j] == 1:
                 volumen_total += objetos[j][1]
                 valor_total += objetos[j][2]
                 combinacion_actual.append(objetos[j][0])
 
-        if volumen_total <= capacidad and valor_total > bestmejor_valor:
-            bestmejor_valor = valor_total
-            bestmejor_combinacion = combinacion_actual
+        # Verificamos si entra y si mejora la solución
+        if volumen_total <= capacidad and valor_total > mejor_valor:
+            mejor_valor = valor_total
+            mejor_combinacion = combinacion_actual
 
-    return bestmejor_valor, bestmejor_combinacion
+    return mejor_valor, mejor_combinacion
 
 menu()
