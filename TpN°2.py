@@ -43,10 +43,18 @@ def busqueda_exhaustiva():
 
     capacidad = int(input("Capacidad de la mochila (cm3): "))
 
-    mejor_valor, mejor_combinacion = exhaustiva(capacidad, objetos)
+    mejor_valor, mejor_combinacion, volumen_utilizado = exhaustiva(capacidad, objetos)
+
+    # Calculamos el volumen utilizado por la mejor combinación
+    volumen_utilizado = 0
+
+    for objeto in objetos:
+        if objeto[0] in mejor_combinacion:
+            volumen_utilizado += objeto[1]
 
     print(f"\nCapacidad elegida: {capacidad} cm3")
     print(f"Mejor combinación: {mejor_combinacion}")
+    print(f"Volumen utilizado: {volumen_utilizado} cm3")
     print(f"Mejor valor: ${mejor_valor}")
 
     pausa()
@@ -54,6 +62,7 @@ def busqueda_exhaustiva():
 def exhaustiva(capacidad, objetos):
     mejor_valor = 0
     mejor_combinacion = []
+    mejor_volumen = 0
 
     combinaciones = product([0, 1], repeat=len(objetos))
 
@@ -73,8 +82,9 @@ def exhaustiva(capacidad, objetos):
         if volumen_total <= capacidad and valor_total > mejor_valor:
             mejor_valor = valor_total
             mejor_combinacion = combinacion_actual
+            mejor_volumen = volumen_total
 
-    return mejor_valor, mejor_combinacion
+    return mejor_valor, mejor_combinacion, mejor_volumen
 
 
 def algoritmo_greedy():
@@ -138,7 +148,7 @@ def greedy(capacidad, objetos, opcion):
     return combinacion, volumen, valor
 
 def comparar():
-    # Lista basada estrictamente en Pesos (grs.) y Valores ($)
+    # Lista basada en Pesos (grs.) y Valores ($)
     objetos2 = [
         (1, 1800, 72),  # (nroElemento, Peso, Valor)
         (2, 600, 36),
@@ -156,7 +166,7 @@ def comparar():
         # Verificamos si la opción ingresada está dentro de las válidas
         if opc in ["1", "2", "3"]:
             break  # Rompe el bucle while y continúa con el programa
-        else:  # <-- Corregida la indentación (tenía un espacio de más)
+        else:  
             print("Opción inválida. Por favor, elija 1, 2 o 3.")
 
     print("\n>> Ejecutando ambos algoritmos para una capacidad de 3000 grs.")
@@ -174,10 +184,8 @@ def comparar():
     print(f"Valor total: ${valor}")
 
     print("\n--- RESULTADO EXHAUSTIVA ---")
-    mejor_valor, mejor_combinacion = exhaustiva(3000, objetos2)
+    mejor_valor, mejor_combinacion, peso_exh = exhaustiva(3000, objetos2)
     
-    # Para la exhaustiva calculamos el peso usado sumando los objetos elegidos
-    peso_exh = sum(obj[1] for obj in objetos2 if obj[0] in mejor_combinacion)
     
     print(f"Objetos seleccionados: {mejor_combinacion}")
     print(f"Peso utilizado: {peso_exh} grs.")
